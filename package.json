@@ -1,0 +1,30 @@
+{
+  "name": "swapp-api",
+  "version": "0.0.1",
+  "description": "'swap node fastify api'",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rimraf ./dist && tsc",
+    "start": "node ./dist/app.js",
+    "dev": "tsc --watch | nodemon -L --inspect=0.0.0.0:9227 ./dist/app.js --watch dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wiredmartian/swapp-node-api.git"
+  },
+  "author": "wiredmartian",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wiredmartian/swapp-node-api/issues"
+  },
+  "homepage": "https://github.com/wiredmartian/swapp-node-api#readme",
+  "dependencies": {
+    "@types/node": "^13.5.0",
+    "fastify": "^2.11.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2",
+    "rimraf": "^3.0.0"
+  }
+}
