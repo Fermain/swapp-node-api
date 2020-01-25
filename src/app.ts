@@ -1,25 +1,25 @@
-// Require the framework and instantiate it
 import fastify from 'fastify';
-
+import { authController } from './conrollers/auth.controller';
 
 const server = fastify({
     logger: true,
-    caseSensitive: false,
+    caseSensitive: true,
     ignoreTrailingSlash: true,
+    maxParamLength: 200,
+    bodyLimit: 6291456, // 6MB
 });
 
-server.get('/', async (request, reply) => {
-  return { hello: 'world' }
-})
+/** register custom controllers */
+server.register(authController);
+/***/
 
-// Run the server!
 const start = async () => {
   try {
-    await server.listen(3000)
+    await server.listen(3000);
     server.log.info(`server listening on ${server.server.address()}`)
   } catch (err) {
-    server.log.error(err)
-    process.exit(1)
+    server.log.error(err);
+    process.exit(1);
   }
-}
-start()
+};
+start();
