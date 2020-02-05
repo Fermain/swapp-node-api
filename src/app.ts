@@ -55,8 +55,8 @@ server.register(sensible);
 
 const start = async () => {
   try {
-    await server.listen(3000);
-    server.log.info(`server listening on ${server.server.address()}`)
+    await server.listen(config.PORT, '127.0.0.1');
+    server.log.info(`server listening on ${config.PORT}`);
   } catch (err) {
     server.log.error(err);
     process.exit(1);

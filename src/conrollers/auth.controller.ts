@@ -1,14 +1,13 @@
 import fastifyPlugin, { nextCallback, PluginOptions } from "fastify-plugin";
-import { FastifyInstance, FastifyReply, FastifyRequest} from "fastify";
-import { ServerResponse } from "http";
+import { FastifyInstance } from "fastify";
+import { AuthHandler } from "../handlers/auth.handler";
+import { authSchema } from "../schemas/auth.schema";
 export const authController = fastifyPlugin(async (server:FastifyInstance, options: PluginOptions, next: nextCallback) => {
     server.route({
-        method: "GET",
+        method: "POST",
         url: "/token",
-        schema: {},
-        handler: (request: FastifyRequest, reply:FastifyReply<ServerResponse>) => {
-            reply.code(200).send({message: 'Hello world'});
-        }
+        schema: authSchema.getToken.schema,
+        handler: AuthHandler.generateAuthToken
     });
     next();
 });
