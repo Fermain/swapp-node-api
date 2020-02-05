@@ -4,16 +4,28 @@ import helmet from 'fastify-helmet';
 import sensible from 'fastify-sensible';
 import rateLimit from 'fastify-rate-limit';
 import CORS from 'fastify-cors';
-
+import envSchema from 'env-schema';
 import { authController } from './conrollers/auth.controller';
 import { AuthHandler } from './handlers/auth.handler';
 
 const server = fastify({
     logger: true,
-    caseSensitive: true,
     ignoreTrailingSlash: true,
     maxParamLength: 200,
     bodyLimit: 6291456, // 6MB
+});
+
+const schema = {
+    type: 'object',
+    required: ['JWT_SECRET_KEY', 'PORT'],
+    properties: {
+        PORT: { type: 'string', default: 8000 },
+        JWT_SECRET_KEY: { type: 'string', default: '8EB5E653C3F44EBBA007DD6364F32140' }
+    }
+};
+const config = envSchema({
+    schema: schema,
+    dotenv: true
 });
 
 /** register custom controllers */
@@ -31,7 +43,7 @@ server.register(rateLimit, {
     whitelist: ['127.0.0.1', '127.0.0.1:8080'],
 });
 server.register(helmet, { hidePoweredBy: { setTo: 'Swapp' } });
-server.register(JWT, { secret: env.AUTH_JWT_PRIVATE_KEY });
+server.register(JWT, { secret: config.JWT_SECRET_KEY });
 server.register(CORS, {
     origin: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
