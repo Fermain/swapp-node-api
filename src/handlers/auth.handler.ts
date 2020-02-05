@@ -1,6 +1,6 @@
 import {LoginModel} from "../models/account.models";
 
-export class AuthController {
+export class AuthHandler {
     constructor() {
     }
 
