@@ -1,7 +1,7 @@
 {
   "name": "swapp-api",
   "version": "0.0.1",
-  "description": "'swap node fastify api'",
+  "description": "swapp node fastify api",
   "main": "app.js",
   "scripts": {
     "build": "rimraf ./dist && tsc",
@@ -13,7 +13,7 @@
     "url": "git+https://github.com/wiredmartian/swapp-node-api.git"
   },
   "author": "wiredmartian",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/wiredmartian/swapp-node-api/issues"
   },

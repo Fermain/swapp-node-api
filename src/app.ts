@@ -1,11 +1,12 @@
 import fastify from 'fastify';
-import fastifyJWT from 'fastify-jwt';
+import JWT from 'fastify-jwt';
 import helmet from 'fastify-helmet';
 import sensible from 'fastify-sensible';
 import rateLimit from 'fastify-rate-limit';
-import fastifyCORS from 'fastify-cors';
+import CORS from 'fastify-cors';
 
 import { authController } from './conrollers/auth.controller';
+import { AuthHandler } from './handlers/auth.handler';
 
 const server = fastify({
     logger: true,
@@ -19,15 +20,19 @@ const server = fastify({
 server.register(authController);
 /***/
 
+/** authentication pre-validation */
+server.addHook("preValidation", AuthHandler.authInterceptor);
+/** authentication pre-validation */
+
 /** middleware */
 server.register(rateLimit, {
     max: 100,
     timeWindow: 2000,
     whitelist: ['127.0.0.1', '127.0.0.1:8080'],
 });
-server.register(helmet, { hidePoweredBy: { setTo: 'Mytelnet' } });
-server.register(fastifyJWT, { secret: env.AUTH_JWT_PRIVATE_KEY });
-server.register(fastifyCORS, {
+server.register(helmet, { hidePoweredBy: { setTo: 'Swapp' } });
+server.register(JWT, { secret: env.AUTH_JWT_PRIVATE_KEY });
+server.register(CORS, {
     origin: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
