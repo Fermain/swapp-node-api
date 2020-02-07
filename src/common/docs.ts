@@ -11,7 +11,7 @@ export const swaggerOptions = {
             url: '',
             description: '',
         },
-        host: 'localhost',
+        host: 'localhost:8000',
         schemes: ['http'],
         consumes: ['application/json'],
         produces: ['application/json'],
