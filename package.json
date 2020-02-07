@@ -4,7 +4,7 @@
   "description": "swapp node fastify api",
   "main": "app.js",
   "scripts": {
-    "start": "node ./dist/app.js",
+    "start": "node ./dist/src/app.js",
     "dev": "npm run rmseed && tsc --watch | nodemon -L --inspect=0.0.0.0:9227 ./dist/src/app.js --watch dist",
     "rmseed": "rimraf ./dist/seeds"
   },
