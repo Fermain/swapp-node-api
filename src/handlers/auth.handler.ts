@@ -1,4 +1,3 @@
-import {LoginModel} from "../models/account.models";
 import {FastifyReply, FastifyRequest} from "fastify";
 import {IncomingMessage, ServerResponse} from "http";
 import jwt from "jsonwebtoken";
@@ -38,8 +37,12 @@ export class AuthHandler {
     public static async authInterceptor(request: FastifyRequest<IncomingMessage>, reply: FastifyReply<ServerResponse>) {
         const authHeader = request.headers.authorization;
         const anonymousRoutes = ['token'];
+        const { req } = request;
+        if (req.url!.match(/\w*documentation\w*\b/g)) {
+            return;
+        }
         try {
-            if (request.req.url.includes(anonymousRoutes[0])) {
+            if (req.url!.includes(anonymousRoutes[0])) {
                 return;
             }
             if (!authHeader) {

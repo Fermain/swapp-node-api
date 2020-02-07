@@ -3,10 +3,14 @@ import JWT from 'fastify-jwt';
 import helmet from 'fastify-helmet';
 import sensible from 'fastify-sensible';
 import rateLimit from 'fastify-rate-limit';
+import fastifySwagger from 'fastify-swagger';
 import CORS from 'fastify-cors';
 import envSchema from 'env-schema';
+
 import { authController } from './conrollers/auth.controller';
 import { AuthHandler } from './handlers/auth.handler';
+import { swaggerOptions } from './common/docs';
+
 
 const server = fastify({
     logger: true,
@@ -14,7 +18,12 @@ const server = fastify({
     maxParamLength: 200,
     bodyLimit: 6291456, // 6MB
 });
-
+server.register(fastifySwagger, swaggerOptions)
+    .ready(err => {
+        if (!err) {
+            server.swagger();
+        }
+    });
 const schema = {
     type: 'object',
     required: ['JWT_SECRET_KEY', 'PORT'],
