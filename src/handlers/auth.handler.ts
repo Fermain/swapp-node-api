@@ -17,7 +17,7 @@ const config = envSchema({
 
 export class AuthHandler {
 
-    public static async generateAuthToken(request: FastifyRequest<IncomingMessage>, reply: FastifyReply<ServerResponse>) {
+    public static async generateToken(request: FastifyRequest<IncomingMessage>, reply: FastifyReply<ServerResponse>) {
         try {
             const { username, password } = request.body;
             console.log(username, password);
@@ -33,6 +33,15 @@ export class AuthHandler {
             console.log(e);
             reply.unauthorized(e.message);
         }
+    }
+    public static async generateAuthToken(email_address: string) {
+        return jwt.sign({
+                email: email_address,
+            }, config.JWT_SECRET_KEY, {
+                issuer: "wiredmartian",
+                algorithm: "HS512",
+                expiresIn: "1h"
+            });
     }
     public static async authInterceptor(request: FastifyRequest<IncomingMessage>, reply: FastifyReply<ServerResponse>) {
         const authHeader = request.headers.authorization;
