@@ -1,5 +1,5 @@
 export interface LoginModel {
-    username: string;
+    email_address: string;
     password: string;
 }
 export interface ICreateUser {
