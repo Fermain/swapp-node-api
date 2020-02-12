@@ -4,7 +4,8 @@ exports.up = function(knex) {
         table.uuid('id').unsigned().primary();
         table.string('full_name').notNullable();
         table.string('email_address').unique().notNullable();
-        table.string('password').notNullable();
+        table.string('salt').notNullable();
+        table.string('hashed_password').notNullable();
         table.timestamp('created_at').defaultTo(knex.fn.now());
         table.timestamp('last_signed_in').nullable();
     });
