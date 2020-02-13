@@ -11,7 +11,32 @@ export const authSchema = {
                         password: { type: 'string', minLength: 8, maxLength: 16 }
                     },
                 required: ['email_address', 'full_name', 'password']
-            }
+            },
+            response: {
+                200: {
+                    type: 'object',
+                    properties: {
+                        success: { type: 'boolean' },
+                        message: { type: 'string' }
+                    }
+                },
+                '4xx': {
+                    type: 'object',
+                    properties: {
+                        statusCode: { type: 'integer' },
+                        error: { type: 'string' },
+                        message: { type: 'string' },
+                    },
+                },
+                500: {
+                    type: 'object',
+                    properties: {
+                        statusCode: { type: 'integer' },
+                        error: { type: 'string' },
+                        message: { type: 'string' },
+                    },
+                },
+            },
         }
     },
     getToken: {

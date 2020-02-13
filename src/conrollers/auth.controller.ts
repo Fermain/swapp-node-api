@@ -7,7 +7,7 @@ export const authController = fastifyPlugin(async (server:FastifyInstance, optio
     server.route({
         method: "POST",
         url: "/register",
-        schema: {},
+        schema: authSchema.registerUser.schema,
         preHandler: (request, reply) => {
 
         },
