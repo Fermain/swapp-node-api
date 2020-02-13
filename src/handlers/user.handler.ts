@@ -3,7 +3,7 @@ import {createHmac, randomBytes} from "crypto"
 import {ICreateUser, LoginModel} from "../models/account.models";
 
 export class UserHandler {
-    public static async insertUser(user: ICreateUser) {
+    public static async createUser(user: ICreateUser) {
         const salt = randomBytes(Math.ceil(8)).toString('hex').slice(0, 16);
         const hashPassword = createHmac('sha512', salt);
         hashPassword.update(user.password);

@@ -6,6 +6,17 @@ import {UserHandler} from "../handlers/user.handler";
 export const authController = fastifyPlugin(async (server:FastifyInstance, options: PluginOptions, next: nextCallback) => {
     server.route({
         method: "POST",
+        url: "/register",
+        schema: authSchema.registerUser.schema,
+        preHandler: (request, reply) => {
+
+        },
+        handler: (request, reply) => {
+
+        }
+    });
+    server.route({
+        method: "POST",
         url: "/token",
         schema: authSchema.getToken.schema,
         preHandler: async (request, reply) => {
