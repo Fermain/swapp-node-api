@@ -11,7 +11,6 @@ import { authController } from './conrollers/auth.controller';
 import { AuthHandler } from './handlers/auth.handler';
 import { swaggerOptions } from './common/docs';
 
-
 const server = fastify({
     logger: true,
     ignoreTrailingSlash: true,
