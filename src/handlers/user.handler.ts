@@ -1,6 +1,7 @@
 import { SWAPCONNECTION } from "../common/db";
 import {createHmac, randomBytes} from "crypto"
 import {ICreateUser, LoginModel} from "../models/account.models";
+import {User} from "../data/user";
 
 export class UserHandler {
     public static async createUser(user: ICreateUser) {
@@ -8,7 +9,6 @@ export class UserHandler {
         const hashPassword = createHmac('sha512', salt);
         hashPassword.update(user.password);
         return SWAPCONNECTION('users').insert({
-            full_name: user.full_name,
             email_address: user.email_address,
             salt: salt,
             hashed_password: hashPassword.digest('hex'),
@@ -16,7 +16,7 @@ export class UserHandler {
         });
     }
     public static async loginUser(login: LoginModel) {
-        const user = await SWAPCONNECTION('users').select('*')
+        const user = await SWAPCONNECTION<User>('users').select('*')
             .where({ email_address: login.email_address })
             .first();
         if (user) {

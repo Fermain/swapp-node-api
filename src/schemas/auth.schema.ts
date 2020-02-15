@@ -6,11 +6,10 @@ export const authSchema = {
                 type: 'object',
                     additionalProperties: false,
                     properties: {
-                        full_name: { type: 'string' },
                         email_address: { type: 'string' },
                         password: { type: 'string', minLength: 8, maxLength: 16 }
                     },
-                required: ['email_address', 'full_name', 'password']
+                required: ['email_address', 'password']
             },
             response: {
                 200: {
