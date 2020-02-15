@@ -23,3 +23,10 @@ If you run through this issue:
 consider the solution below 
 
 https://stackoverflow.com/a/50131831/5483182
+
+
+## Running the API
+
+`$ npm install`
+
+`$ npm run dev` or `$ npm run start`
