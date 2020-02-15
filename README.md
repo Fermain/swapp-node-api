@@ -30,3 +30,8 @@ https://stackoverflow.com/a/50131831/5483182
 `$ npm install`
 
 `$ npm run dev` or `$ npm run start`
+
+
+## API Documentation
+
+http://localhost:3000/documentation
