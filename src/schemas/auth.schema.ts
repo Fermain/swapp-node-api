@@ -49,7 +49,7 @@ export const authSchema = {
                     email_address: { type: 'string' },
                     password: { type: 'string' },
                 },
-                required: ['username', 'password'],
+                required: ['email_address', 'password'],
             },
             response: {
                 200: {

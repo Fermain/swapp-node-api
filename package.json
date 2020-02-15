@@ -4,9 +4,8 @@
   "description": "swapp node fastify api",
   "main": "app.js",
   "scripts": {
-    "start": "node ./dist/src/app.js",
-    "dev": "npm run rmseed && tsc --watch | nodemon -L --inspect=0.0.0.0:9227 ./dist/src/app.js --watch dist",
-    "rmseed": "rimraf ./dist/seeds"
+    "start": "node ./dist/app.js",
+    "dev": "tsc --watch | nodemon -L --inspect=0.0.0.0:9227 ./dist/app.js --watch dist"
   },
   "repository": {
     "type": "git",
@@ -36,6 +35,7 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.2",
-    "rimraf": "^3.0.0"
+    "rimraf": "^3.0.0",
+    "typescript": "^3.7.5"
   }
 }

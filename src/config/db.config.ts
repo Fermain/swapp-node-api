@@ -26,9 +26,9 @@ module.exports = {
             max: 10,
         },
         connection: {
-            host: config.DEV_HOST || '127.0.0.1',
-            user: config.DEV_DB_USER || 'root_martian',
-            password: config.DEV_DB_PASSWORD || '!Martian',
+            host: config.DEV_HOST,
+            user: config.DEV_DB_USER,
+            password: config.DEV_DB_PASSWORD,
             database: 'DEV_SWAPP',
             connectionTimeout: 3000,
             requestTimeout: 20000,
