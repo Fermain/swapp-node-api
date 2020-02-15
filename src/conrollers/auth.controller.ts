@@ -1,9 +1,10 @@
 import fastifyPlugin, { nextCallback, PluginOptions } from "fastify-plugin";
-import { FastifyInstance } from "fastify";
+import {FastifyInstance, FastifyReply, FastifyRequest} from "fastify";
 import { AuthHandler } from "../handlers/auth.handler";
 import { authSchema } from "../schemas/auth.schema";
 import {UserHandler} from "../handlers/user.handler";
 import {ICreateUser} from "../models/account.models";
+import {IncomingMessage, ServerResponse} from "http";
 export const authController = fastifyPlugin(async (server:FastifyInstance, options: PluginOptions, next: nextCallback) => {
     server.route({
         method: "POST",
@@ -38,9 +39,9 @@ export const authController = fastifyPlugin(async (server:FastifyInstance, optio
                 return reply.badRequest(e);
             }
         },
-        handler: (request, reply) => {
+        handler: async (request:FastifyRequest<IncomingMessage>, reply: FastifyReply<ServerResponse>) => {
             try {
-                const token = AuthHandler.generateAuthToken(request.user.email_address);
+                const token = await AuthHandler.generateAuthToken((request.user as any).email_address);
                 return reply.send({ token });
             } catch (e) {
                 return reply.forbidden(e);

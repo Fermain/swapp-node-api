@@ -22,7 +22,7 @@ export class UserHandler {
         if (user) {
             const hashedPassword = createHmac('sha512', user.salt);
             hashedPassword.update(login.password);
-            if (user.hashed_password === hashedPassword) {
+            if (user.hashed_password === hashedPassword.digest('hex')) {
                 return {...user, success: true };
             }
             return {
