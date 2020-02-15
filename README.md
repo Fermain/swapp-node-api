@@ -22,6 +22,6 @@ A replica of https://barterbay.ca/
 `$ npm run dev` or `$ npm run start`
 
 
-## API Documentation
+## Swagger docs and API testing
 
-http://localhost:3000/documentation
+http://localhost:8000/documentation
