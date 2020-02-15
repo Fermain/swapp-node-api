@@ -1,4 +1,4 @@
-import { swappdb } from "../common/db";
+import { SWAPCONNECTION } from "../common/db";
 import {createHmac, randomBytes} from "crypto"
 import {ICreateUser, LoginModel} from "../models/account.models";
 
@@ -7,7 +7,7 @@ export class UserHandler {
         const salt = randomBytes(Math.ceil(8)).toString('hex').slice(0, 16);
         const hashPassword = createHmac('sha512', salt);
         hashPassword.update(user.password);
-        return swappdb('users').insert({
+        return SWAPCONNECTION('users').insert({
             first_name: user.first_name,
             email_address: user.email_address,
             salt: salt,
@@ -15,7 +15,7 @@ export class UserHandler {
         });
     }
     public static async loginUser(login: LoginModel) {
-        const user = await swappdb('users').select('*')
+        const user = await SWAPCONNECTION('users').select('*')
             .where({ email_address: login.email_address })
             .first();
         if (user) {
@@ -26,7 +26,7 @@ export class UserHandler {
             }
             return {
                 error: 'Incorrect email address or password',
-                success: false;
+                success: false
             }
         }
         return { error: 'user does not exist', success: false };
