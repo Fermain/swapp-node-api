@@ -11,7 +11,7 @@ exports.up = function(knex) {
     table.timestamp('created_at').defaultTo(knex.fn.now());
     table.boolean('cancelled').defaultTo(false);
     /** reference */
-    table.foreign('category_id').references('categories.id');
+    // table.foreign('category_id').references('categories.id');
   });
 };
 exports.down = function(knex) {
