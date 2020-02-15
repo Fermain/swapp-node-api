@@ -5,7 +5,7 @@ A replica of https://barterbay.ca/
 
 ## Running knex initial migrations
 
-1. Make sure you have mysql installed on your machine
+1. This api uses PostgreSQL 
 
 2. Make you have knex installed globally
 
