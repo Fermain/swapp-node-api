@@ -1,6 +1,6 @@
 import envSchema from "env-schema";
 import knex from "knex";
-import { db_connections } from "../config/db.config";
+import * as db_connections from "../config/db.config";
 
 const schema = {
     type: 'object',

@@ -1,12 +1,12 @@
-import envSchema from "env-schema";
+const envSchema = require("env-schema");
 
 const schema = {
     type: 'object',
-    required: ['DEV_HOST', 'DEV_DB_PASSWORD', 'DEV_DB_USER', 'DEV_DB_NAME'],
+    required: [],
     properties: {
         PORT: { type: 'string', default: 8000 },
         JWT_SECRET_KEY: { type: 'string', default: '8EB5E653C3F44EBBA007DD6364F32140' },
-        DEV_HOST: { type: 'string' },
+        DEV_HOST: { type: 'string', default: 'localhost' },
         DEV_DB_USER: { type: 'string' },
         DEV_DB_PASSWORD: { type: 'string' },
         DEV_DB_NAME: { type: 'string' }
@@ -16,7 +16,7 @@ const config = envSchema({
     schema: schema,
     dotenv: true
 });
-export const db_connections = {
+module.exports = {
     development: {
         charset: 'utf8',
         client: 'mysql',
@@ -29,13 +29,13 @@ export const db_connections = {
             host: config.DEV_HOST,
             user: config.DEV_DB_USER,
             password: config.DEV_DB_PASSWORD,
-            database: config.DEV_DB_NAME,
+            database: "DEV_SWAPP",
             connectionTimeout: 3000,
             requestTimeout: 20000,
         },
         migrations: {
             tableName: 'knex_migrations',
-            directory: `../migrations`,
+            directory: `../../migrations`,
         },
     },
     production: {
