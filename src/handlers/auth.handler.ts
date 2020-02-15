@@ -45,19 +45,16 @@ export class AuthHandler {
     }
     public static async authInterceptor(request: FastifyRequest<IncomingMessage>, reply: FastifyReply<ServerResponse>) {
         const authHeader = request.headers.authorization;
-        const anonymousRoutes = ['token', 'register'];
+        const anonymousRoutes = ['/token', '/register'];
         const { req } = request;
         if (req.url!.match(/\w*documentation\w*\b/g)) {
             return;
         }
         try {
             for (let r of anonymousRoutes) {
-                if (req.url === r) {
+                if (req.url == r) {
                     return;
                 }
-            }
-            if (req.url!.includes(anonymousRoutes[0])) {
-                return;
             }
             if (!authHeader) {
                 reply.forbidden('Request missing auth token');

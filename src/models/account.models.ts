@@ -3,7 +3,7 @@ export interface LoginModel {
     password: string;
 }
 export interface ICreateUser {
-    first_name: string;
+    full_name: string;
     email_address: string;
     password: string;
     created_at: Date,

@@ -8,10 +8,11 @@ export class UserHandler {
         const hashPassword = createHmac('sha512', salt);
         hashPassword.update(user.password);
         return SWAPCONNECTION('users').insert({
-            first_name: user.first_name,
+            full_name: user.full_name,
             email_address: user.email_address,
             salt: salt,
-            hashed_password: hashPassword
+            hashed_password: hashPassword.digest('hex'),
+            last_signed_in: new Date()
         });
     }
     public static async loginUser(login: LoginModel) {
