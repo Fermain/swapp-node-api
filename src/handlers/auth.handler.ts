@@ -1,7 +1,9 @@
 import {FastifyReply, FastifyRequest} from "fastify";
-import {IncomingMessage, ServerResponse} from "http";
+import { IncomingMessage, ServerResponse} from "http";
 import jwt from "jsonwebtoken";
 import envSchema from "env-schema";
+import {ITokenPayload} from "../models/token.payload.model";
+import {AESEncryption} from "../common/encryption";
 
 const schema = {
     type: 'object',
@@ -16,9 +18,11 @@ const config = envSchema({
 });
 
 export class AuthHandler {
-    public static async generateAuthToken(email_address: string) {
+    public static async generateAuthToken(tokenPayload: ITokenPayload) {
+        const userId = AESEncryption.encrypt(tokenPayload.user_id.toString());
         return jwt.sign({
-                email: email_address,
+                email: tokenPayload.email_address,
+                userId: userId
             }, config.JWT_SECRET_KEY, {
                 issuer: "wiredmartian",
                 algorithm: "HS512",

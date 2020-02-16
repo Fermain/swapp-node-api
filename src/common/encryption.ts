@@ -1,26 +1,29 @@
 import { createCipheriv, randomBytes, createDecipheriv } from 'crypto';
+import envSchema from "env-schema";
 
+const schema = {
+    type: 'object',
+    required: ['AES_ENCRYPTION_KEY'],
+    properties: {
+        AES_ENCRYPTION_KEY: { type: 'string' }
+    }
+};
+const config = envSchema({
+    schema: schema,
+    dotenv: true
+});
 /**
  * Class to Encrypt and decrypt values using aes-256-cbc and Initialization Vector.
  */
 export class AESEncryption {
-    private readonly encryption_key: string;
-    /**
-     * Specify your encryption key
-     * @param {string} encryption_key - The key used to encrypt and decrypt a value (must be 32 characters)
-     */
-    constructor(encryption_key: string) {
-        if (encryption_key.length > 32) {
-            throw new Error('Encryption key is too long, must be 32 characters or less');
-        }
-        this.encryption_key = encryption_key
-    }
+    private static readonly encryption_key: string = config.AES_ENCRYPTION_KEY; // must be 32 characters
+
     /**
      * Encrypt a value.
      * @param {string} text - The value to encrypt
      * @return {string} The encrypted value.
      */
-    public encrypt(text: string): string {
+    public static encrypt(text: string): string {
         const iv = randomBytes(16); // For AES
         const cipher = createCipheriv('aes-256-cbc', Buffer.from(this.encryption_key), iv);
         let encrypted = cipher.update(text);
@@ -32,7 +35,7 @@ export class AESEncryption {
      * @param {string} text - The value to decrypt
      * @return {string} The decrypted value.
      */
-    public decrypt(text: string): string {
+    public static decrypt(text: string): string {
         const textParts = text.split(':');
         const iv = Buffer.from(textParts[1], 'hex');
         const encryptedText = Buffer.from(textParts.join(':'), 'hex');
