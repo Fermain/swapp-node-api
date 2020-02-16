@@ -5,6 +5,7 @@ import { authSchema } from "../schemas/auth.schema";
 import {UserHandler} from "../handlers/user.handler";
 import {ICreateUser} from "../models/account.models";
 import {IncomingMessage, ServerResponse} from "http";
+import {ITokenPayload} from "../models/token.payload.model";
 export const authController = fastifyPlugin(async (server:FastifyInstance, options: PluginOptions, next: nextCallback) => {
     server.route({
         method: "POST",
@@ -41,7 +42,12 @@ export const authController = fastifyPlugin(async (server:FastifyInstance, optio
         },
         handler: async (request:FastifyRequest<IncomingMessage>, reply: FastifyReply<ServerResponse>) => {
             try {
-                const token = await AuthHandler.generateAuthToken((request.user as any).email_address);
+                const user = request.user as any;
+                const tokenPayload: ITokenPayload = {
+                    email_address: user.email_address,
+                    user_id: user.id
+                };
+                const token = await AuthHandler.generateAuthToken(tokenPayload);
                 return reply.send({ token });
             } catch (e) {
                 return reply.forbidden(e);

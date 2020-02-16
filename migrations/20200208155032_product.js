@@ -10,8 +10,10 @@ exports.up = function(knex) {
     table.boolean('is_free').defaultTo(false);
     table.timestamp('created_at').defaultTo(knex.fn.now());
     table.boolean('cancelled').defaultTo(false);
+    table.enum('category', ['Accessories', 'Clothes', 'Electronics', 'Home']).notNullable();
     /** reference */
-    // table.foreign('category_id').references('categories.id');
+    table.integer('user_profile_id')
+        .references('user_profiles.id');
   });
 };
 exports.down = function(knex) {
