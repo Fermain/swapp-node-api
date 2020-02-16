@@ -1,4 +1,4 @@
-import { createCipheriv, randomBytes, createDecipheriv } from 'crypto';
+import {createCipheriv, createDecipheriv, randomBytes} from 'crypto';
 import envSchema from "env-schema";
 
 const schema = {
@@ -37,7 +37,8 @@ export class AESEncryption {
      */
     public static decrypt(text: string): string {
         const textParts = text.split(':');
-        const iv = Buffer.from(textParts[1], 'hex');
+        // @ts-ignore
+        const iv = Buffer.from(textParts.shift(), 'hex');
         const encryptedText = Buffer.from(textParts.join(':'), 'hex');
         const decipher = createDecipheriv('aes-256-cbc', Buffer.from(this.encryption_key), iv);
         let decrypted = decipher.update(encryptedText);

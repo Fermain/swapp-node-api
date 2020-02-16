@@ -21,11 +21,12 @@ export const swaggerOptions = {
 
         ],
         securityDefinitions: {
-            apiKey: {
-                type: 'apiKey',
-                name: 'apiKey',
-                in: 'header',
-            },
+            Bearer: {
+                description: "",
+                type: "apiKey",
+                name: "Authorization",
+                in: "header"
+            }
         },
     },
 };
