@@ -5,8 +5,7 @@ const schema = {
     required: [],
     properties: {
         PORT: { type: 'string', default: 8000 },
-        JWT_SECRET_KEY: { type: 'string', default: '8EB5E653C3F44EBBA007DD6364F32140' },
-        DEV_HOST: { type: 'string', default: 'localhost' },
+        DEV_HOST: { type: 'string', default: '127.0.0.1' },
         DEV_DB_USER: { type: 'string' },
         DEV_DB_PASSWORD: { type: 'string' },
         DEV_DB_NAME: { type: 'string' }
