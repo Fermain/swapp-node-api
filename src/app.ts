@@ -10,6 +10,7 @@ import envSchema from 'env-schema';
 import { authController } from './conrollers/auth.controller';
 import { AuthHandler } from './handlers/auth.handler';
 import { swaggerOptions } from './common/docs';
+import { userProfileController } from "./conrollers/user.profile.controller";
 
 const server = fastify({
     logger: true,
@@ -38,6 +39,7 @@ const config = envSchema({
 
 /** register custom controllers */
 server.register(authController);
+server.register(userProfileController);
 /***/
 
 /** authentication pre-validation */

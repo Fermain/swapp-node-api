@@ -1,7 +1,7 @@
 import { SWAPCONNECTION } from "../common/db";
 import {createHmac, randomBytes} from "crypto"
-import {ICreateUser, LoginModel} from "../models/account.models";
-import {User} from "../data/user";
+import { ICreateUser, LoginModel } from "../models/account.models";
+import { User } from "../data/user";
 
 export class UserHandler {
     public static async createUser(user: ICreateUser) {
