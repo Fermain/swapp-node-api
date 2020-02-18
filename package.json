@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node ./dist/app.js",
-    "dev": "tsc --watch | nodemon -L --inspect=0.0.0.0:9227 ./dist/app.js --watch dist"
+    "dev": "tsc --watch | nodemon -L --inspect=0.0.0.0:9227 ./dist/app.js --watch dist",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
