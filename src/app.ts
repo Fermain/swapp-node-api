@@ -5,6 +5,7 @@ import sensible from 'fastify-sensible';
 import rateLimit from 'fastify-rate-limit';
 import fastifySwagger from 'fastify-swagger';
 import CORS from 'fastify-cors';
+import multer from 'fastify-multer';
 import envSchema from 'env-schema';
 
 import {authController} from './conrollers/auth.controller';
@@ -12,7 +13,6 @@ import {AuthHandler} from './handlers/auth.handler';
 import {swaggerOptions} from './common/docs';
 import {userProfileController} from "./conrollers/user.profile.controller";
 
-const multipart = Symbol('multipart');
 const server = fastify({
     logger: true,
     ignoreTrailingSlash: true,
@@ -44,10 +44,6 @@ server.register(userProfileController);
 /***/
 
 /** authentication pre-validation */
-server.addContentTypeParser('multipart', (req, done) => {
-    (req as any)[multipart] = true;
-    done(null, req);
-});
 server.addHook("preValidation", AuthHandler.authInterceptor);
 /** authentication pre-validation */
 
@@ -66,7 +62,7 @@ server.register(CORS, {
     credentials: true,
 });
 server.register(sensible);
-// server.register(multer.contentParser);
+server.register(multer.contentParser);
 /** middleware */
 
 const start = async () => {
