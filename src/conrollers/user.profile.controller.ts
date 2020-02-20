@@ -72,9 +72,20 @@ export const userProfileController = fastifyPlugin(async (server: FastifyInstanc
         }
     });
     server.route({
-        method: "POST",
+        method: "PATCH",
         url: "/profile/avatar",
-        schema: {},
+        schema: {
+            tags: ['User Profile'],
+            response: {
+                200: {
+                    type: 'object',
+                    properties: {
+                        success: {type: 'boolean'},
+                        message: {type: 'string'}
+                    }
+                }
+            }
+        },
         preHandler: imageUpload.single('avatar'),
         handler: async (request, reply) => {
             try {
@@ -83,7 +94,7 @@ export const userProfileController = fastifyPlugin(async (server: FastifyInstanc
                 const avi = request.file as IMulterFile;
                 const aviUpdated: number = await UserProfileHandler.updateUserAvatar(userId, avi.path);
                 if (aviUpdated) {
-                    reply.send({message: 'avatar updated!'});
+                    reply.send({message: 'avatar updated!', success: true});
                 } else {
                     reply.badRequest('Failed to update avatar!');
                 }

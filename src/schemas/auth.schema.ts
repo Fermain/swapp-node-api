@@ -27,12 +27,12 @@ export const authSchema = {
                         message: { type: 'string' },
                     },
                 },
-                500: {
+                '5xx': {
                     type: 'object',
                     properties: {
-                        statusCode: { type: 'integer' },
-                        error: { type: 'string' },
-                        message: { type: 'string' },
+                        statusCode: {type: 'integer'},
+                        error: {type: 'string'},
+                        message: {type: 'string'},
                     },
                 },
             },
@@ -65,12 +65,12 @@ export const authSchema = {
                         message: { type: 'string' },
                     },
                 },
-                500: {
+                '5xx': {
                     type: 'object',
-                        properties: {
-                        statusCode: { type: 'integer' },
-                        error: { type: 'string' },
-                        message: { type: 'string' },
+                    properties: {
+                        statusCode: {type: 'integer'},
+                        error: {type: 'string'},
+                        message: {type: 'string'},
                     },
                 },
             },
