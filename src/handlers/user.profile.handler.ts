@@ -36,4 +36,10 @@ export class UserProfileHandler {
         return SWAPCONNECTION<UserProfile>('user_profiles').select('*')
             .where({id}).first();
     }
+
+    public static async updateUserAvatar(id: number, imagePath: string) {
+        return SWAPCONNECTION('user_profiles')
+            .where({id}).first()
+            .update({photo: imagePath});
+    }
 }
