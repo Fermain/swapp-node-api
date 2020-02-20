@@ -39,7 +39,7 @@ export class UserProfileHandler {
 
     public static async updateUserAvatar(id: number, imagePath: string) {
         return SWAPCONNECTION('user_profiles')
-            .where({id}).first()
+            .where({user_id: id}).first()
             .update({photo: imagePath});
     }
 }
