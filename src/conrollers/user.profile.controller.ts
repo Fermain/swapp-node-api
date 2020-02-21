@@ -1,11 +1,41 @@
 import fastifyPlugin, {nextCallback, PluginOptions} from "fastify-plugin";
-import {FastifyInstance} from "fastify";
+import multer from "fastify-multer";
+import {FastifyInstance, FastifyRequest} from "fastify";
 import {userProfileSchema} from "../schemas/user.profile.schema";
-import {ICreateUserProfile} from "../models/user.profile.models";
+import {ICreateUserProfile, IMulterFile} from "../models/user.profile.models";
 import {UserProfileHandler} from "../handlers/user.profile.handler";
 import {AESEncryption} from "../common/encryption";
+import {IncomingMessage} from "http";
+import {File} from "fastify-multer/lib/interfaces";
 
-export const userProfileController = fastifyPlugin(async (server:FastifyInstance, options: PluginOptions, next: nextCallback) => {
+/** File upload config */
+const storage = multer.diskStorage({
+    destination: (req: FastifyRequest<IncomingMessage>, file: File, callback) => {
+        callback(null, './public/avatars');
+    },
+    filename: (req, file, callback) => {
+        callback(null, `${Date.now()}-${file.originalname}`);
+    }
+});
+const imageUpload = multer({
+    storage: storage,
+    fileFilter: (req, file, callback) => {
+        /* if (file.mimetype !== 'image/png') {
+            return callback(new Error("Incorrect mime type"), false);
+        }*/
+        callback(null, true);
+    },
+    limits: {
+        fieldNameSize: 100,
+        fields: 0,
+        /* fileSize: 2 * (1024 * 1024), */
+        files: 1,
+        headerPairs: 100
+    }
+});
+/** File upload config */
+
+export const userProfileController = fastifyPlugin(async (server: FastifyInstance, options: PluginOptions, next: nextCallback) => {
     server.route({
         method: "POST",
         url: "/profile",
@@ -38,6 +68,38 @@ export const userProfileController = fastifyPlugin(async (server:FastifyInstance
                 return reply.notFound(`user ${request.params.id} does not exist`);
             } catch (e) {
                 return reply.badRequest(e);
+            }
+        }
+    });
+    server.route({
+        method: "PATCH",
+        url: "/profile/avatar",
+        schema: {
+            tags: ['User Profile'],
+            response: {
+                200: {
+                    type: 'object',
+                    properties: {
+                        success: {type: 'boolean'},
+                        message: {type: 'string'}
+                    }
+                }
+            }
+        },
+        preHandler: imageUpload.single('avatar'),
+        handler: async (request, reply) => {
+            try {
+                let {userId} = await request.jwtVerify();
+                userId = AESEncryption.decrypt(userId);
+                const avi = request.file as IMulterFile;
+                const aviUpdated: number = await UserProfileHandler.updateUserAvatar(userId, avi.path);
+                if (aviUpdated) {
+                    reply.send({message: 'avatar updated!', success: true});
+                } else {
+                    reply.badRequest('Failed to update avatar!');
+                }
+            } catch (e) {
+                reply.internalServerError(e);
             }
         }
     });

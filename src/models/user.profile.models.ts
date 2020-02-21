@@ -5,3 +5,13 @@ export interface ICreateUserProfile {
     province?: string;
     bio?: string;
 }
+
+export interface IMulterFile {
+    fieldname: string;
+    originalname: string;
+    encoding: string; // 7bit
+    destination: string;
+    filename: string;
+    path: string;
+    size: number;
+}
