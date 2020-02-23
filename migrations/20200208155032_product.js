@@ -12,8 +12,7 @@ exports.up = function(knex) {
     table.boolean('cancelled').defaultTo(false);
     table.enum('category', ['Accessories', 'Clothes', 'Electronics', 'Home']).notNullable();
     /** reference */
-    table.integer('user_profile_id')
-        .references('user_profiles.id');
+    table.integer('user_profile_id').references('user_profiles.id');
   });
 };
 exports.down = function(knex) {
