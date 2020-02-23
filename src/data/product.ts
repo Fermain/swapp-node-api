@@ -8,4 +8,5 @@ export interface Product {
     is_free: boolean;
     created_at: Date,
     cancelled: boolean;
+    user_profile_id: number;
 }
