@@ -11,6 +11,7 @@ import {authController} from './conrollers/auth.controller';
 import {AuthHandler} from './handlers/auth.handler';
 import {swaggerOptions} from './common/docs';
 import {userProfileController} from "./conrollers/user.profile.controller";
+import {productController} from "./conrollers/product.controller";
 
 const multipart = Symbol('multipart');
 const server = fastify({
@@ -41,6 +42,7 @@ const config = envSchema({
 /** register custom controllers */
 server.register(authController);
 server.register(userProfileController);
+server.register(productController);
 /***/
 
 /** authentication pre-validation */
