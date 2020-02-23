@@ -7,9 +7,11 @@ exports.up = function (knex) {
         table.timestamp('last_updated').defaultTo(knex.fn.now());
         table.enum('status', ['pending', 'accepted', 'rejected', 'cancelled']).notNullable();
 
-        table.integer('bidding_user_id').notNullable().index();
+        table.integer('bidding_user_profile_id').notNullable().index();
+        table.integer('product_owner_profile_id').notNullable().index();
 
-        table.integer('owner_user_id').notNullable().index();
+        table.integer('product_in_question_id').notNullable().index();
+        table.integer('trade_in_product_id').notNullable().index();
     });
 };
 
