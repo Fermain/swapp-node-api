@@ -18,6 +18,7 @@ export const swaggerOptions = {
         tags: [
             { name: 'Authentication', description: 'End-points related to auth' },
             { name: 'User Profile', description: 'User profile management' },
+            {name: 'Products', description: 'Product management calls'}
 
         ],
         securityDefinitions: {

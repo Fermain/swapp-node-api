@@ -35,7 +35,9 @@ export const productController = fastifyPlugin(async (server: FastifyInstance, o
     server.route({
         method: "POST",
         url: "/product",
-        schema: {},
+        schema: {
+            tags: ['Products']
+        },
         preHandler: imageUpload.array('productImages', 10),
         handler: async (request: FastifyRequest<IncomingMessage>, reply: FastifyReply<ServerResponse>) => {
             try {
