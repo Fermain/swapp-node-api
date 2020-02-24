@@ -1,3 +1,4 @@
+import fs from "fs";
 import fastify from 'fastify';
 import JWT from 'fastify-jwt';
 import helmet from 'fastify-helmet';
@@ -72,13 +73,22 @@ server.register(sensible);
 /** middleware */
 
 const start = async () => {
-  try {
-    await server.listen(config.PORT, '127.0.0.1');
-    server.log.info(`server listening on ${config.PORT}`);
-  } catch (err) {
-    server.log.error(err);
-    process.exit(1);
-  }
+    try {
+        const paths = ['./public/products', './public/avatars'];
+        if (!fs.existsSync('./public')) {
+            fs.mkdirSync('./public');
+        }
+        for (let child of paths) {
+            if (!fs.existsSync(child)) {
+                fs.mkdirSync(child);
+            }
+        }
+        await server.listen(config.PORT, '127.0.0.1');
+        server.log.info(`server listening on ${config.PORT}`);
+    } catch (err) {
+        server.log.error(err);
+        process.exit(1);
+    }
 };
 process.on('uncaughtException', err => {
     console.error(err);

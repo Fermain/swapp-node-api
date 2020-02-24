@@ -1,5 +1,5 @@
 import {FastifyReply, FastifyRequest} from "fastify";
-import { IncomingMessage, ServerResponse} from "http";
+import {IncomingMessage, ServerResponse} from "http";
 import jwt from "jsonwebtoken";
 import envSchema from "env-schema";
 import {ITokenPayload} from "../models/token.payload.model";
@@ -45,7 +45,6 @@ export class AuthHandler {
             if (!authHeader) {
                 reply.unauthorized('Request missing auth token');
             }
-            await request.jwtVerify();
         } catch (e) {
             reply.unauthorized(e.message);
         }
