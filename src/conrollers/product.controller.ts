@@ -1,4 +1,5 @@
 import fastifyPlugin, {nextCallback, PluginOptions} from "fastify-plugin";
+import fs from "fs";
 import multer from "fastify-multer";
 import {FastifyInstance, FastifyReply, FastifyRequest} from "fastify";
 import {IncomingMessage, ServerResponse} from "http";
@@ -11,7 +12,12 @@ import {Product} from "../data/product";
 /** File upload config */
 const storage = multer.diskStorage({
     destination: (req: FastifyRequest<IncomingMessage>, file: File, callback) => {
-        callback(null, './public/products');
+        const _user = (req as any).currentUser;
+        const _path = `./public/products/${_user.userId}`;
+        if (!fs.existsSync(_path)) {
+            fs.mkdirSync(_path);
+        }
+        callback(null, `./public/products/${_user.userId}`);
     },
     filename: (req, file, callback) => {
         callback(null, `${Date.now()}-${file.originalname}`);
