@@ -27,7 +27,9 @@ A replica of https://barterbay.ca/
 http://localhost:8000/documentation
 
 
-# API Calls
+
+
+## API Calls
 
 #### Auth
 
