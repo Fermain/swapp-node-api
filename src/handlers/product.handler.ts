@@ -2,6 +2,7 @@ import {SWAPCONNECTION} from "../common/db";
 import {Product} from "../data/product";
 import {IMulterFile} from "../models/user.profile.models";
 import {UserProfileHandler} from "./user.profile.handler";
+import {uuid} from "uuidv4";
 
 export class ProductHandler {
     constructor() {
@@ -28,6 +29,7 @@ export class ProductHandler {
             .insert({
                 name: product.name,
                 description: product.description,
+                category: product.category,
                 location: product.location,
                 ideal_exchange: product.ideal_exchange,
                 is_available: product.is_available,
@@ -38,6 +40,7 @@ export class ProductHandler {
         const productId: number = _product[0].id;
         const imageFields = images.map((img: IMulterFile) => {
             return {
+                id: uuid(),
                 image_path: img.path,
                 product_id: productId
             }

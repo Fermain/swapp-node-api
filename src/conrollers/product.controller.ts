@@ -24,8 +24,8 @@ const imageUpload = multer({
     },
     limits: {
         fieldNameSize: 100,
-        fields: 0,
-        files: 10,
+        fields: 8,
+        files: 5,
         headerPairs: 100
     }
 });
