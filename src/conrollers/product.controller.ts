@@ -46,9 +46,6 @@ export const productController = fastifyPlugin(async (server: FastifyInstance, o
         },
         preHandler: imageUpload.array('productImages', 10),
         handler: async (request: FastifyRequest<IncomingMessage>, reply: FastifyReply<ServerResponse>) => {
-            console.log('decorate request');
-            console.log((request as any).currentUser);
-            console.log('------------------------');
             try {
                 let {userId} = await request.jwtVerify();
                 userId = AESEncryption.decrypt(userId);
