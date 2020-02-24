@@ -45,6 +45,9 @@ export class AuthHandler {
             if (!authHeader) {
                 reply.unauthorized('Request missing auth token');
             }
+            let {userId, email} = await request.jwtVerify();
+            userId = AESEncryption.decrypt(userId);
+            (request as any).currentUser = {userId, email};
         } catch (e) {
             reply.unauthorized(e.message);
         }

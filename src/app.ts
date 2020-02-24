@@ -51,6 +51,7 @@ server.addContentTypeParser('multipart', (req, done) => {
     (req as any)[multipart] = true;
     done(null, req);
 });
+server.decorateRequest("currentUser", {});
 server.addHook("preValidation", AuthHandler.authInterceptor);
 /** authentication pre-validation */
 
