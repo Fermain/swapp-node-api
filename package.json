@@ -33,7 +33,8 @@
     "fastify-swagger": "^2.4.0",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.20.8",
-    "pg": "^7.18.1"
+    "pg": "^7.18.1",
+    "uuidv4": "^6.0.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.2",

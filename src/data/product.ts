@@ -2,6 +2,7 @@ export interface Product {
     id: number;
     name: string;
     description: string;
+    category: string;
     location: string;
     ideal_exchange?: string;
     is_available: boolean;
