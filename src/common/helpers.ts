@@ -14,4 +14,12 @@ export class Helpers {
         }
         return this.removeFilesFromDir(files);
     }
+
+    static async removeSingleFileFromDir(file: IMulterFile) {
+        const path = `${file.destination}/${file.filename}`;
+        if (fs.existsSync(path)) {
+            fs.unlinkSync(path);
+        }
+        return true;
+    }
 }

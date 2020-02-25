@@ -1,12 +1,12 @@
 import fastifyPlugin, {nextCallback, PluginOptions} from "fastify-plugin";
 import multer from "fastify-multer";
 import {FastifyInstance, FastifyRequest} from "fastify";
-import {userProfileSchema} from "../schemas/user.profile.schema";
 import {ICreateUserProfile, IMulterFile} from "../models/user.profile.models";
 import {UserProfileHandler} from "../handlers/user.profile.handler";
 import {AESEncryption} from "../common/encryption";
 import {IncomingMessage} from "http";
 import {File} from "fastify-multer/lib/interfaces";
+import {Helpers} from "../common/helpers";
 
 /** File upload config */
 const storage = multer.diskStorage({
@@ -39,7 +39,7 @@ export const userProfileController = fastifyPlugin(async (server: FastifyInstanc
     server.route({
         method: "POST",
         url: "/profile",
-        schema: userProfileSchema.createProfile.schema,
+        schema: UserProfileHandler.createUserProfileSchema.schema,
         handler: async (request, reply) => {
             try {
                 const user = {...request.body} as ICreateUserProfile;
@@ -58,7 +58,7 @@ export const userProfileController = fastifyPlugin(async (server: FastifyInstanc
     server.route({
         method: "GET",
         url: "/profile/:id",
-        schema: userProfileSchema.getUserProfile.schema,
+        schema: UserProfileHandler.getUserProfileByIdSchema.schema,
         handler: async (request, reply) => {
             try {
                 const user = await UserProfileHandler.getUserProfileById(parseInt(request.params.id));
@@ -88,10 +88,10 @@ export const userProfileController = fastifyPlugin(async (server: FastifyInstanc
         },
         preHandler: imageUpload.single('avatar'),
         handler: async (request, reply) => {
+            const avi = request.file as IMulterFile;
             try {
                 let {userId} = await request.jwtVerify();
                 userId = AESEncryption.decrypt(userId);
-                const avi = request.file as IMulterFile;
                 const aviUpdated: number = await UserProfileHandler.updateUserAvatar(userId, avi.path);
                 if (aviUpdated) {
                     reply.send({message: 'avatar updated!', success: true});
@@ -99,6 +99,7 @@ export const userProfileController = fastifyPlugin(async (server: FastifyInstanc
                     reply.badRequest('Failed to update avatar!');
                 }
             } catch (e) {
+                await Helpers.removeSingleFileFromDir(avi);
                 reply.internalServerError(e);
             }
         }
