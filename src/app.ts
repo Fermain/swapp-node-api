@@ -47,12 +47,12 @@ server.register(productController);
 /***/
 
 /** authentication pre-validation */
+server.decorateRequest("currentUser", {});
+server.addHook("preValidation", AuthHandler.authInterceptor);
 server.addContentTypeParser('multipart', (req, done) => {
     (req as any)[multipart] = true;
     done(null, req);
 });
-server.decorateRequest("currentUser", {});
-server.addHook("preValidation", AuthHandler.authInterceptor);
 /** authentication pre-validation */
 
 /** middleware */
@@ -70,7 +70,6 @@ server.register(CORS, {
     credentials: true,
 });
 server.register(sensible);
-// server.register(multer.contentParser);
 /** middleware */
 
 const start = async () => {

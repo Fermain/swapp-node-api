@@ -8,6 +8,7 @@ import {AESEncryption} from "../common/encryption";
 import {IMulterFile} from "../models/user.profile.models";
 import {ProductHandler} from "../handlers/product.handler";
 import {Product} from "../data/product";
+import {Helpers} from "../common/helpers";
 
 /** File upload config */
 const storage = multer.diskStorage({
@@ -50,13 +51,17 @@ export const productController = fastifyPlugin(async (server: FastifyInstance, o
                 let {userId} = await request.jwtVerify();
                 userId = AESEncryption.decrypt(userId);
                 const images = request.files as IMulterFile[];
+                console.log(images);
                 const product = {...request.body} as Product;
                 const result = await ProductHandler.addProduct(userId, product, images);
                 reply.send(result[0]);
             } catch (e) {
+                /** remove the uploaded files*/
+                const files = request.files as IMulterFile[];
+                await Helpers.removeFilesFromDir(files);
                 reply.internalServerError(e);
             }
-        }
+        },
     });
     next();
 });
