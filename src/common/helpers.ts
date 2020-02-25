@@ -3,13 +3,14 @@ import {IMulterFile} from "../models/user.profile.models";
 
 export class Helpers {
 
-    static removeFilesFromDir(files: IMulterFile[]) {
+    static async removeFilesFromDir(files: IMulterFile[]) {
         if (files.length === 0) {
             return true;
         }
         const file: IMulterFile = files.pop();
-        if (fs.existsSync(file.path)) {
-            fs.rmdirSync(file.path, {recursive: false});
+        const path = `${file.destination}/${file.filename}`;
+        if (fs.existsSync(path)) {
+            fs.unlinkSync(path);
         }
         return this.removeFilesFromDir(files);
     }
