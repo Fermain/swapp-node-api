@@ -20,15 +20,11 @@ const storage = multer.diskStorage({
 const imageUpload = multer({
     storage: storage,
     fileFilter: (req, file, callback) => {
-        /* if (file.mimetype !== 'image/png') {
-            return callback(new Error("Incorrect mime type"), false);
-        }*/
         callback(null, true);
     },
     limits: {
         fieldNameSize: 100,
         fields: 0,
-        /* fileSize: 2 * (1024 * 1024), */
         files: 1,
         headerPairs: 100
     }
