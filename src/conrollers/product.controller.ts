@@ -54,9 +54,11 @@ export const productController = fastifyPlugin(async (server: FastifyInstance, o
                 const result = await ProductHandler.addProduct(userId, product, images);
                 reply.send(result[0]);
             } catch (e) {
+                /** remove the uploaded files*/
+
                 reply.internalServerError(e);
             }
-        }
+        },
     });
     next();
 });
