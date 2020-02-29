@@ -1,4 +1,4 @@
-import {SWAPCONNECTION} from "../common/db";
+import {swappDB} from "../common/db";
 import {Product} from "../data/product";
 import {IMulterFile} from "../models/user.profile.models";
 import {UserProfileHandler} from "./user.profile.handler";
@@ -8,19 +8,57 @@ export class ProductHandler {
     constructor() {
     }
 
+    public static addProductSchema = {
+        schema: {
+            tags: ['Products'],
+            body: {
+                type: 'object',
+                properties: {
+                    name: {type: 'string'},
+                    description: {type: 'string'},
+                    location: {type: 'string'},
+                    ideal_exchange: {type: 'string'},
+                    is_available: {type: 'boolean', default: false},
+                    is_free: {type: 'boolean', default: false},
+                    category: {type: 'string'},
+                    productImages: {type: 'array', items: 'fileSchema#'}
+                },
+                required: ['name', 'description', 'location', 'ideal_exchange', 'category', 'productImages']
+            },
+            response: {
+                200: {
+                    type: 'object',
+                    properties: {
+                        success: {type: 'boolean'},
+                        message: {type: 'string'},
+                        product_id: {type: 'number'}
+                    }
+                },
+                '4xx': {
+                    type: 'object',
+                    properties: {
+                        statusCode: {type: 'integer'},
+                        error: {type: 'string'},
+                        message: {type: 'string'},
+                    },
+                },
+            },
+        }
+    };
+
     public static async getUserProducts(userId: number): Promise<Product[]> {
-        return SWAPCONNECTION<Product>('products')
+        return swappDB<Product>('products')
             .where({user_id: userId, cancelled: false});
     }
 
     public static async getSingleUserProduct(userId: number): Promise<Product | undefined> {
-        return SWAPCONNECTION<Product>('products')
+        return swappDB<Product>('products')
             .where({user_id: userId, cancelled: false})
             .first();
     }
 
     public static async addProduct(userId: number, product: Product, images: IMulterFile[]) {
-        const trx = await SWAPCONNECTION.transaction();
+        const trx = await swappDB.transaction();
         const userProfile = await UserProfileHandler.getUserProfileByUserId(userId);
         if (!userProfile) {
             throw new Error('User profile does not exist');
