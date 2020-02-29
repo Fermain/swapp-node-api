@@ -27,13 +27,17 @@ const storage = multer.diskStorage({
 const imageUpload = multer({
     storage: storage,
     fileFilter: (req, file, callback) => {
+        const allowedTypes = ['image/jpeg', 'image/png'];
+        if (allowedTypes.indexOf(file.mimetype) === -1) {
+            callback(new Error(`${file.originalname} has an invalid mime type`), false);
+        }
         callback(null, true);
     },
     limits: {
         fieldNameSize: 100,
         fields: 8,
         files: 5,
-        headerPairs: 100
+        fieldSize: 1024
     }
 });
 /** File upload config */
@@ -42,16 +46,12 @@ export const productController = fastifyPlugin(async (server: FastifyInstance, o
     server.route({
         method: "POST",
         url: "/product",
-        schema: {
-            tags: ['Products']
-        },
+        schema: ProductHandler.addProductSchema.schema,
         preHandler: imageUpload.array('productImages', 10),
         handler: async (request: FastifyRequest<IncomingMessage>, reply: FastifyReply<ServerResponse>) => {
             try {
-                let {userId} = await request.jwtVerify();
-                userId = AESEncryption.decrypt(userId);
+                const userId = parseInt(AESEncryption.decrypt(request.user['userId']));
                 const images = request.files as IMulterFile[];
-                console.log(images);
                 const product = {...request.body} as Product;
                 const result = await ProductHandler.addProduct(userId, product, images);
                 reply.send(result[0]);

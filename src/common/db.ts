@@ -1,5 +1,6 @@
 import envSchema from "env-schema";
 import knex from "knex";
+
 const db_connection  = require("../config/db.config");
 
 const schema = {
@@ -18,4 +19,4 @@ const config = envSchema({
     dotenv: true
 });
 
-export const SWAPCONNECTION = knex(db_connection['development']);
+export const swappDB = knex(db_connection['development']);
