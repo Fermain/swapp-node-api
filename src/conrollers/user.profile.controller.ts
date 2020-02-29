@@ -39,9 +39,8 @@ export const userProfileController = fastifyPlugin(async (server: FastifyInstanc
         handler: async (request, reply) => {
             try {
                 const user = {...request.body} as ICreateUserProfile;
-                let {userId} = await request.jwtVerify();
-                userId = AESEncryption.decrypt(userId);
-                const res = await UserProfileHandler.createUserProfile(user, parseInt(userId));
+                const userId = parseInt(AESEncryption.decrypt(request.user['userId']));
+                const res = await UserProfileHandler.createUserProfile(user, userId);
                 if (res && res.length > 0) {
                     return reply.send({profile_id: res[0].id, success: true, message: 'user profile updated'});
                 }
@@ -86,8 +85,7 @@ export const userProfileController = fastifyPlugin(async (server: FastifyInstanc
         handler: async (request, reply) => {
             const avi = request.file as IMulterFile;
             try {
-                let {userId} = await request.jwtVerify();
-                userId = AESEncryption.decrypt(userId);
+                const userId = parseInt(AESEncryption.decrypt(request.user['userId']));
                 const aviUpdated: number = await UserProfileHandler.updateUserAvatar(userId, avi.path);
                 if (aviUpdated) {
                     reply.send({message: 'avatar updated!', success: true});
