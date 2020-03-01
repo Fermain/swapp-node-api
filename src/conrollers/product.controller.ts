@@ -9,18 +9,21 @@ import {ProductHandler} from "../handlers/product.handler";
 import {Product} from "../data/product";
 import {IMulterFile} from "../models/user.profile.models";
 import {Helpers} from "../common/helpers";
+import {uuid} from "uuidv4";
 
 /** File upload config */
 const storage = multer.diskStorage({
-    destination: (request: FastifyRequest<IncomingMessage>, file: File, callback) => {
+    destination: (request: FastifyRequest<IncomingMessage>, file: File, done) => {
         const _path = `./public/products/product-${request.params.id}`;
         if (!fs.existsSync(_path)) {
             fs.mkdirSync(_path);
         }
-        callback(null, `./public/products/product-${request.params.id}`);
+        done(null, `./public/products/product-${request.params.id}`);
     },
-    filename: (req, file, callback) => {
-        callback(null, `${Date.now()}-${file.originalname}`);
+    filename: (req: FastifyRequest<IncomingMessage>, file, done) => {
+        const fileExtension = file.originalname.substr(file.originalname.lastIndexOf('.') + 1);
+        const fileName = `${uuid()}.${fileExtension}`;
+        done(null, fileName);
     }
 });
 const imageUpload = multer({
