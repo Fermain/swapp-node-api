@@ -47,7 +47,6 @@ export const productController = fastifyPlugin(async (server: FastifyInstance, o
         method: "POST",
         url: "/product",
         schema: ProductHandler.addProductSchema.schema,
-        preHandler: imageUpload.array('productImages', 10),
         handler: async (request: FastifyRequest<IncomingMessage>, reply: FastifyReply<ServerResponse>) => {
             try {
                 const userId = parseInt(AESEncryption.decrypt(request.user['userId']));

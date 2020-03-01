@@ -7,7 +7,6 @@ import rateLimit from 'fastify-rate-limit';
 import fastifySwagger from 'fastify-swagger';
 import CORS from 'fastify-cors';
 import envSchema from 'env-schema';
-import fastifyMultipart from "fastify-multipart";
 
 import {authController} from './conrollers/auth.controller';
 import {AuthHandler} from './handlers/auth.handler';
@@ -28,13 +27,6 @@ server.register(fastifySwagger, swaggerOptions)
             server.swagger();
         }
     });
-server.register(fastifyMultipart, {
-    addToBody: true,
-    sharedSchemaId: 'fileSchema',
-    onFile: (fieldName, stream, filename, encoding, mimetype, body) => {
-        stream.resume();
-    }
-});
 const schema = {
     type: 'object',
     required: ['JWT_SECRET_KEY', 'PORT'],
@@ -57,10 +49,10 @@ server.register(productController);
 /** authentication pre-validation */
 server.decorateRequest("currentUser", {});
 server.addHook("preValidation", AuthHandler.authInterceptor);
-/*server.addContentTypeParser('multipart', (req, done) => {
+server.addContentTypeParser('multipart', (req, done) => {
     (req as any)[multipart] = true;
     done(null, req);
-});*/
+});
 /** authentication pre-validation */
 
 /** middleware */
