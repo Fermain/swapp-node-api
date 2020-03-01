@@ -75,6 +75,28 @@ export class ProductHandler {
             }, ['*']);
     }
 
+    public static uploadProductImagesSchema = {
+        schema: {
+            tags: ['Products'],
+            response: {
+                200: {
+                    type: 'array',
+                    items: {
+                        image_id: {type: 'number'}
+                    }
+                },
+                '4xx': {
+                    type: 'object',
+                    properties: {
+                        statusCode: {type: 'integer'},
+                        error: {type: 'string'},
+                        message: {type: 'string'},
+                    },
+                },
+            },
+        }
+    };
+
     public static async uploadProductImages(productId: number, files: IMulterFile[]) {
         const product = await this._getProductById(productId);
         if (!product) {

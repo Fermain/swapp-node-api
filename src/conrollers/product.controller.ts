@@ -7,16 +7,17 @@ import {File} from "fastify-multer/lib/interfaces";
 import {AESEncryption} from "../common/encryption";
 import {ProductHandler} from "../handlers/product.handler";
 import {Product} from "../data/product";
+import {IMulterFile} from "../models/user.profile.models";
+import {Helpers} from "../common/helpers";
 
 /** File upload config */
 const storage = multer.diskStorage({
-    destination: (req: FastifyRequest<IncomingMessage>, file: File, callback) => {
-        const _user = (req as any).currentUser;
-        const _path = `./public/products/${_user.userId}`;
+    destination: (request: FastifyRequest<IncomingMessage>, file: File, callback) => {
+        const _path = `./public/products/product-${request.params.id}`;
         if (!fs.existsSync(_path)) {
             fs.mkdirSync(_path);
         }
-        callback(null, `./public/products/${_user.userId}`);
+        callback(null, `./public/products/product-${request.params.id}`);
     },
     filename: (req, file, callback) => {
         callback(null, `${Date.now()}-${file.originalname}`);
@@ -71,10 +72,32 @@ export const productController = fastifyPlugin(async (server: FastifyInstance, o
         method: "POST",
         url: "/product/:id/images",
         schema: {
-            tags: ['Products']
+            tags: ['Products'],
+            response: {
+                200: {
+                    type: 'array',
+                    items: {
+                        type: 'object',
+                        properties: {
+                            id: {type: 'string'}
+                        }
+                    }
+                }
+            }
         },
-        handler: (request, reply) => {
-
+        preHandler: imageUpload.array('productImages', 10),
+        handler: async (request: FastifyRequest<IncomingMessage>, reply: FastifyReply<ServerResponse>) => {
+            try {
+                const files = request.files as IMulterFile[];
+                const result = await ProductHandler.uploadProductImages(request.params.id, files);
+                console.log(result);
+                reply.send(result);
+            } catch (e) {
+                /** remove the uploaded files*/
+                const files = request.files as IMulterFile[];
+                await Helpers.removeFilesFromDir(files);
+                reply.internalServerError(e);
+            }
         }
     });
     next();

@@ -47,7 +47,6 @@ server.register(productController);
 /***/
 
 /** authentication pre-validation */
-server.decorateRequest("currentUser", {});
 server.addHook("preValidation", AuthHandler.authInterceptor);
 server.addContentTypeParser('multipart', (req, done) => {
     (req as any)[multipart] = true;
@@ -56,6 +55,7 @@ server.addContentTypeParser('multipart', (req, done) => {
 /** authentication pre-validation */
 
 /** middleware */
+server.register(sensible);
 server.register(rateLimit, {
     max: 100,
     timeWindow: 2000,
@@ -69,7 +69,6 @@ server.register(CORS, {
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
 });
-server.register(sensible);
 /** middleware */
 
 const start = async () => {
