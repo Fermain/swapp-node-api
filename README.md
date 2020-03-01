@@ -25,3 +25,37 @@ A replica of https://barterbay.ca/
 ## Swagger docs and API testing
 
 http://localhost:8000/documentation
+
+
+
+
+## API Calls
+
+#### Auth
+
+`/register` - user registration
+
+`/token` - get an auth token
+
+
+### User pofile managment
+
+`/profile` - creates a user profile
+
+`/profile{id}` - get the user's profile
+
+`/profile/avatar` - upload the user's profile picture
+
+
+### Products management
+
+`/product` - creates a product
+`/product/{id}/images` - uploads product images
+
+
+
+### ISSUES
+
+Validating schema on a multipart form request is a pain in the neck.  
+
+It seems easier to just make separate endpoints for files, than put them on the same request with text fields
