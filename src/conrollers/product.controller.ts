@@ -5,10 +5,8 @@ import {FastifyInstance, FastifyReply, FastifyRequest} from "fastify";
 import {IncomingMessage, ServerResponse} from "http";
 import {File} from "fastify-multer/lib/interfaces";
 import {AESEncryption} from "../common/encryption";
-import {IMulterFile} from "../models/user.profile.models";
 import {ProductHandler} from "../handlers/product.handler";
 import {Product} from "../data/product";
-import {Helpers} from "../common/helpers";
 
 /** File upload config */
 const storage = multer.diskStorage({
@@ -50,17 +48,34 @@ export const productController = fastifyPlugin(async (server: FastifyInstance, o
         handler: async (request: FastifyRequest<IncomingMessage>, reply: FastifyReply<ServerResponse>) => {
             try {
                 const userId = parseInt(AESEncryption.decrypt(request.user['userId']));
-                const images = request.files as IMulterFile[];
                 const product = {...request.body} as Product;
-                const result = await ProductHandler.addProduct(userId, product, images);
-                reply.send(result[0]);
+                const result = await ProductHandler.addProduct(userId, product);
+                if (result && result.length > 0) {
+                    reply.send({
+                        success: true,
+                        message: 'Product added successfully!',
+                        product_id: result[0].id
+                    })
+                } else {
+                    reply.code(400).send({
+                        success: false,
+                        message: 'Failed to add product!',
+                    });
+                }
             } catch (e) {
-                /** remove the uploaded files*/
-                const files = request.files as IMulterFile[];
-                await Helpers.removeFilesFromDir(files);
                 reply.internalServerError(e);
             }
         },
+    });
+    server.route({
+        method: "POST",
+        url: "/product/:id/images",
+        schema: {
+            tags: ['Products']
+        },
+        handler: (request, reply) => {
+
+        }
     });
     next();
 });
