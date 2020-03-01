@@ -49,7 +49,8 @@ http://localhost:8000/documentation
 
 ### Products management
 
-`/product` - creates a product, and upload it's images
+`/product` - creates a product
+`/product/{id}/images` - uploads product images
 
 
 
@@ -57,4 +58,4 @@ http://localhost:8000/documentation
 
 Validating schema on a multipart form request is a pain in the neck.  
 
-It seems easier to just made separate endpoints for files, than put them on the same request with text fields
+It seems easier to just make separate endpoints for files, than put them on the same request with text fields
