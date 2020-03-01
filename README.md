@@ -53,4 +53,8 @@ http://localhost:8000/documentation
 
 
 
+### ISSUES
 
+Validating schema on a multipart form request is a pain in the neck.  
+
+It seems easier to just made separate endpoints for files, than put them on the same request with text fields
