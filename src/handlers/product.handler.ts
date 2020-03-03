@@ -8,6 +8,17 @@ export class ProductHandler {
     constructor() {
     }
 
+    public static async getUserProducts(userId: number): Promise<Product[]> {
+        return swappDB<Product>('products')
+            .where({user_id: userId, cancelled: false});
+    }
+
+    public static async getSingleUserProduct(userId: number): Promise<Product | undefined> {
+        return swappDB<Product>('products')
+            .where({user_id: userId, cancelled: false})
+            .first();
+    }
+
     public static addProductSchema = {
         schema: {
             tags: ['Products'],
@@ -21,9 +32,8 @@ export class ProductHandler {
                     is_available: {type: 'boolean', default: false},
                     is_free: {type: 'boolean', default: false},
                     category: {type: 'string'},
-                    productImages: {type: 'array', items: 'fileSchema#'}
                 },
-                required: ['name', 'description', 'location', 'ideal_exchange', 'category', 'productImages']
+                required: ['name', 'description', 'location', 'ideal_exchange', 'category']
             },
             response: {
                 200: {
@@ -46,24 +56,12 @@ export class ProductHandler {
         }
     };
 
-    public static async getUserProducts(userId: number): Promise<Product[]> {
-        return swappDB<Product>('products')
-            .where({user_id: userId, cancelled: false});
-    }
-
-    public static async getSingleUserProduct(userId: number): Promise<Product | undefined> {
-        return swappDB<Product>('products')
-            .where({user_id: userId, cancelled: false})
-            .first();
-    }
-
-    public static async addProduct(userId: number, product: Product, images: IMulterFile[]) {
-        const trx = await swappDB.transaction();
+    public static async addProduct(userId: number, product: Product) {
         const userProfile = await UserProfileHandler.getUserProfileByUserId(userId);
         if (!userProfile) {
             throw new Error('User profile does not exist');
         }
-        const _product: any[] = await trx<Product>('products')
+        return swappDB('products')
             .insert({
                 name: product.name,
                 description: product.description,
@@ -75,16 +73,49 @@ export class ProductHandler {
                 cancelled: false,
                 user_profile_id: userProfile.id
             }, ['*']);
-        const productId: number = _product[0].id;
-        const imageFields = images.map((img: IMulterFile) => {
+    }
+
+    public static uploadProductImagesSchema = {
+        schema: {
+            tags: ['Products'],
+            response: {
+                200: {
+                    type: 'array',
+                    items: {
+                        image_id: {type: 'number'}
+                    }
+                },
+                '4xx': {
+                    type: 'object',
+                    properties: {
+                        statusCode: {type: 'integer'},
+                        error: {type: 'string'},
+                        message: {type: 'string'},
+                    },
+                },
+            },
+        }
+    };
+
+    public static async uploadProductImages(productId: number, files: IMulterFile[]) {
+        const product = await this._getProductById(productId);
+        if (!product) {
+            throw new Error('Product does not exist');
+        }
+        const imageFields = files.map((img: IMulterFile) => {
             return {
                 id: uuid(),
                 image_path: img.path,
                 product_id: productId
             }
         });
-        await trx('product_images').insert(imageFields, ['*']);
-        await trx.commit();
-        return _product;
+        return swappDB('product_images').insert(imageFields, ['id']);
+    }
+
+    /** private functions */
+    private static async _getProductById(productId: number) {
+        return swappDB<Product>('products')
+            .select('id').where({id: productId, cancelled: false})
+            .first();
     }
 }

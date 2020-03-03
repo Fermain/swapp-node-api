@@ -31,16 +31,10 @@ export class AuthHandler {
     }
     public static async authInterceptor(request: FastifyRequest<IncomingMessage>, reply: FastifyReply<ServerResponse>) {
         const authHeader = request.headers.authorization;
-        const anonymousRoutes = ['/token', '/register'];
-        const { req } = request;
-        if (req.url!.match(/\w*documentation\w*\b/g)) {
-            return;
-        }
+        const anonymousRoutes = ['/token', '/register', '/documentation'];
         try {
-            for (let r of anonymousRoutes) {
-                if (req.url == r) {
-                    return;
-                }
+            if (anonymousRoutes.indexOf(request.req.url) !== -1) {
+                return;
             }
             if (!authHeader) {
                 reply.unauthorized('Request missing auth token');
