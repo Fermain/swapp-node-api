@@ -50,6 +50,7 @@ http://localhost:8000/documentation
 ### Products management
 
 `/product` - creates a product
+
 `/product/{id}/images` - uploads product images
 
 
