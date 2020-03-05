@@ -7,20 +7,27 @@ import {AESEncryption} from "../common/encryption";
 import {IncomingMessage} from "http";
 import {File} from "fastify-multer/lib/interfaces";
 import {Helpers} from "../common/helpers";
+import {uuid} from "uuidv4";
 
 /** File upload config */
 const storage = multer.diskStorage({
-    destination: (req: FastifyRequest<IncomingMessage>, file: File, callback) => {
-        callback(null, './public/avatars');
+    destination: (req: FastifyRequest<IncomingMessage>, file: File, done) => {
+        done(null, './public/avatars');
     },
-    filename: (req, file, callback) => {
-        callback(null, `${Date.now()}-${file.originalname}`);
+    filename: (req, file, done) => {
+        const fileExtension = file.originalname.substr(file.originalname.lastIndexOf('.') + 1);
+        const fileName = `${uuid()}.${fileExtension}`;
+        done(null, fileName);
     }
 });
 const imageUpload = multer({
     storage: storage,
-    fileFilter: (req, file, callback) => {
-        callback(null, true);
+    fileFilter: (req, file, done) => {
+        const allowedTypes = ['image/jpeg', 'image/png'];
+        if (allowedTypes.indexOf(file.mimetype) === -1) {
+            done(new Error(`${file.originalname} has an invalid mime type`), false);
+        }
+        done(null, true);
     },
     limits: {
         fieldNameSize: 100,
