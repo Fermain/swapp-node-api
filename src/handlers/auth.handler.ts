@@ -33,6 +33,9 @@ export class AuthHandler {
         const authHeader = request.headers.authorization;
         const anonymousRoutes = ['/token', '/register', '/documentation'];
         try {
+            if (request.req.url!.match(/\w*documentation\w*\b/g)) {
+                return;
+            }
             if (anonymousRoutes.indexOf(request.req.url) !== -1) {
                 return;
             }
