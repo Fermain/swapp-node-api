@@ -19,6 +19,54 @@ export class ProductHandler {
             .first();
     }
 
+    public static getProductsSchema = {
+        schema: {
+            tags: ['Products'],
+            params: {
+                type: 'object',
+                properties: {
+                    limit: {type: 'number'}
+                }
+            },
+            response: {
+                200: {
+                    type: 'array',
+                    items: {
+                        type: 'object',
+                        properties: {
+                            product_id: {type: 'integer'},
+                            name: {type: 'string'},
+                            description: {type: 'string'},
+                            location: {type: 'string'},
+                            is_free: {type: 'boolean'},
+                            is_available: {type: 'boolean'},
+                            created_at: {type: 'string'},
+                            user_profile_id: {type: 'integer'},
+                            image_path: {type: 'string'},
+                        }
+                    }
+                },
+            }
+        }
+    };
+
+    public static async getProducts(limit?: number) {
+        return swappDB.raw(`select
+             distinct on (i.product_id) i.product_id,
+             p."name",
+             p.description,
+             p."location",
+             p.is_free,
+             p.is_available,
+             p.created_at,
+             p.user_profile_id,
+             i.image_path
+             from products p
+             inner join product_images i on p.id = i.product_id
+             order by product_id desc
+             limit ?`, limit);
+    }
+
     public static addProductSchema = {
         schema: {
             tags: ['Products'],

@@ -103,5 +103,19 @@ export const productController = fastifyPlugin(async (server: FastifyInstance, o
             }
         }
     });
+    server.route({
+        method: "GET",
+        url: "/products/:limit",
+        schema: ProductHandler.getProductsSchema.schema,
+        handler: async (request, reply) => {
+            try {
+                const limit = parseInt(request.params.limit);
+                let result = await ProductHandler.getProducts(limit);
+                reply.send(result.rows);
+            } catch (e) {
+                reply.badRequest(e);
+            }
+        }
+    });
     next();
 });
