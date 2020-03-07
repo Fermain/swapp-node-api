@@ -113,7 +113,7 @@ export const productController = fastifyPlugin(async (server: FastifyInstance, o
                 let result = await ProductHandler.getProducts(limit);
                 reply.send(result.rows);
             } catch (e) {
-                reply.badRequest();
+                reply.badRequest(e);
             }
         }
     });
