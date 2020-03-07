@@ -22,11 +22,13 @@ export class ProductHandler {
     public static getProductsSchema = {
         schema: {
             tags: ['Products'],
-            params: {
+            querystring: {
                 type: 'object',
                 properties: {
-                    limit: {type: 'number'}
-                }
+                    limit: {type: 'number'},
+                    page: {type: 'number'}
+                },
+                required: ['limit', 'page']
             },
             response: {
                 200: {
@@ -50,7 +52,7 @@ export class ProductHandler {
         }
     };
 
-    public static async getProducts(limit?: number) {
+    public static async getProducts(limit?: number, page?: number) {
         return swappDB.raw(`select
              distinct on (i.product_id) i.product_id,
              p."name",
@@ -64,7 +66,8 @@ export class ProductHandler {
              from products p
              inner join product_images i on p.id = i.product_id
              order by product_id desc
-             limit ?`, limit);
+             limit ?
+             offset ?`, [limit, page]);
     }
 
     public static addProductSchema = {
