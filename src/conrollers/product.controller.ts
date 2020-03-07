@@ -93,7 +93,6 @@ export const productController = fastifyPlugin(async (server: FastifyInstance, o
             try {
                 const files = request.files as IMulterFile[];
                 const result = await ProductHandler.uploadProductImages(request.params.id, files);
-                console.log(result);
                 reply.send(result);
             } catch (e) {
                 /** remove the uploaded files*/
@@ -105,12 +104,13 @@ export const productController = fastifyPlugin(async (server: FastifyInstance, o
     });
     server.route({
         method: "GET",
-        url: "/products/:limit",
+        url: "/products",
         schema: ProductHandler.getProductsSchema.schema,
         handler: async (request, reply) => {
             try {
-                const limit = parseInt(request.params.limit);
-                let result = await ProductHandler.getProducts(limit);
+                const limit = parseInt(request.query.limit);
+                const page = parseInt(request.query.page);
+                let result = await ProductHandler.getProducts(limit, page);
                 reply.send(result.rows);
             } catch (e) {
                 reply.badRequest(e);
