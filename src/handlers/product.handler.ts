@@ -53,6 +53,7 @@ export class ProductHandler {
     };
 
     public static async getProducts(limit?: number, page?: number) {
+        page = (page * limit);
         return swappDB.raw(`select
              distinct on (i.product_id) i.product_id,
              p."name",
