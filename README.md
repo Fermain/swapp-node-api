@@ -53,7 +53,7 @@ http://localhost:8000/documentation
 
 `/product/{id}/images` - uploads product images
 
-`/products/{limit}` - get a list of products
+`/products/?limit={number}&page={number}` - get a list of products
 
 
 
