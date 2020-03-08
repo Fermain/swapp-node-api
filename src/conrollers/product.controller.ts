@@ -117,5 +117,27 @@ export const productController = fastifyPlugin(async (server: FastifyInstance, o
             }
         }
     });
+    server.route({
+        method: "GET",
+        url: "/product/:id",
+        schema: ProductHandler.getProductSchema.schema,
+        handler: async (request, reply) => {
+            try {
+                const productId = parseInt(request.params.id);
+                let product = await ProductHandler.getProduct(productId);
+                if (!product) {
+                    return reply.notFound(`product with id ${productId} does not exist`);
+                }
+                let productImages = await ProductHandler.getProductImages(productId);
+                if (productImages.length === 0) {
+                    return reply.forbidden(`product has no images and therefore cannot be displayed`);
+                }
+                const result = {...product, productImages};
+                reply.send(result);
+            } catch (e) {
+                reply.badRequest(e);
+            }
+        }
+    });
     next();
 });
