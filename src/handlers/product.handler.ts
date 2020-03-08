@@ -15,6 +15,7 @@ export class ProductHandler {
 
     public static getProductSchema = {
         schema: {
+            tags: ['Products'],
             params: {
                 type: 'object',
                 properties: {
