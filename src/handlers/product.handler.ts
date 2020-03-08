@@ -13,9 +13,14 @@ export class ProductHandler {
             .where({user_id: userId, cancelled: false});
     }
 
-    public static async getSingleUserProduct(userId: number): Promise<Product | undefined> {
-        return swappDB<Product>('products')
-            .where({user_id: userId, cancelled: false})
+    public static async getProduct(productId: number): Promise<Product> {
+        return swappDB('products')
+            .select('id as productId',
+                'name', 'description',
+                'ideal_exchange as exchangeFor',
+                'is_free as isFree', 'is_available as isAvailable',
+                'category', 'user_profile_id as productOwnerId')
+            .where({id: productId, cancelled: false})
             .first();
     }
 
@@ -162,6 +167,11 @@ export class ProductHandler {
             }
         });
         return swappDB('product_images').insert(imageFields, ['id']);
+    }
+
+    public static async getProductImages(productId: number) {
+        return swappDB('product_images').select('image_path as imageURL')
+            .where({product_id: productId});
     }
 
     /** private functions */
