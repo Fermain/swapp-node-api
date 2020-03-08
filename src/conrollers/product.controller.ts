@@ -120,9 +120,7 @@ export const productController = fastifyPlugin(async (server: FastifyInstance, o
     server.route({
         method: "GET",
         url: "/product/:id",
-        schema: {
-            tags: ['Products']
-        },
+        schema: ProductHandler.getProductSchema.schema,
         handler: async (request, reply) => {
             try {
                 const productId = parseInt(request.params.id);

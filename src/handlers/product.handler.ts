@@ -13,6 +13,41 @@ export class ProductHandler {
             .where({user_id: userId, cancelled: false});
     }
 
+    public static getProductSchema = {
+        schema: {
+            params: {
+                type: 'object',
+                properties: {
+                    id: {type: 'integer'}
+                }
+            },
+            response: {
+                200: {
+                    type: 'object',
+                    properties: {
+                        productId: {type: 'integer'},
+                        name: {type: 'string'},
+                        description: {type: 'string'},
+                        exchangeFor: {type: 'string'},
+                        isFree: {type: 'boolean'},
+                        isAvailable: {type: 'boolean'},
+                        category: {type: 'string'},
+                        productOwnerId: {type: 'integer'},
+                        productImages: {
+                            type: 'array',
+                            items: {
+                                type: 'object',
+                                properties: {
+                                    imageURL: {type: 'string'}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    };
+
     public static async getProduct(productId: number): Promise<Product> {
         return swappDB('products')
             .select('id as productId',
