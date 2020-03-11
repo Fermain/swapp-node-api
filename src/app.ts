@@ -8,11 +8,11 @@ import fastifySwagger from 'fastify-swagger';
 import CORS from 'fastify-cors';
 import envSchema from 'env-schema';
 
-import {authController} from './conrollers/auth.controller';
+import {authController} from './controllers/auth.controller';
 import {AuthHandler} from './handlers/auth.handler';
 import {swaggerOptions} from './common/docs';
-import {userProfileController} from "./conrollers/user.profile.controller";
-import {productController} from "./conrollers/product.controller";
+import {userProfileController} from "./controllers/user.profile.controller";
+import {productController} from "./controllers/product.controller";
 
 const multipart = Symbol('multipart');
 const server = fastify({
